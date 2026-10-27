@@ -1,0 +1,68 @@
+table anomaly_daily_purchase
+	lineageTag: 7e98c5bf-532d-4ab7-815e-0fc3edac6e69
+
+	column 'date'
+		dataType: date
+		lineageTag: 2cfb1472-9958-416c-a2a2-c96f8a35a288
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+	column browse
+		dataType: int64
+		lineageTag: efeb8a73-5ad4-4654-b83f-35c17cc1a38d
+		summarizeBy: sum
+		sourceColumn: browse
+
+		annotation SummarizationSetBy = Automatic
+
+	column cart
+		dataType: int64
+		lineageTag: d4ca869c-5f0b-4c6f-bf7e-3eb20c24e39c
+		summarizeBy: sum
+		sourceColumn: cart
+
+		annotation SummarizationSetBy = Automatic
+
+	column favorite
+		dataType: int64
+		lineageTag: 043eb98e-771a-423a-a41f-9a85b0cdfcd7
+		summarizeBy: sum
+		sourceColumn: favorite
+
+		annotation SummarizationSetBy = Automatic
+
+	column purchase
+		dataType: int64
+		lineageTag: a8d19f03-819e-4b02-a6f4-432a1f5b769b
+		summarizeBy: sum
+		sourceColumn: purchase
+
+		annotation SummarizationSetBy = Automatic
+
+	column purchase_ma7
+		dataType: double
+		lineageTag: f271e548-8343-4526-b884-29f37d843fb2
+		summarizeBy: sum
+		sourceColumn: purchase_ma7
+
+		annotation SummarizationSetBy = Automatic
+
+	column purchase_z
+		dataType: double
+		lineageTag: 12738079-6a3e-4ef0-a2ed-8293dbb67803
+		summarizeBy: sum
+		sourceColumn: purchase_z
+
+		annotation SummarizationSetBy = Automatic
+
+	partition anomaly_daily_purchase = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents("C:/Users/14362/WorkBuddy/2026-10-22-19-10-44/pbi_dashboard/data/anomaly_daily_purchase.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					#"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					#"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {{"date", type date}, {"browse", Int64.Type}, {"cart", Int64.Type}, {"favorite", Int64.Type}, {"purchase", Int64.Type}, {"purchase_ma7", type number}, {"purchase_z", type number}})
+				in
+					#"Changed Type"

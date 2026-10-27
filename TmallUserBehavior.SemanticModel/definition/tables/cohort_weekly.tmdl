@@ -1,0 +1,60 @@
+table cohort_weekly
+	lineageTag: 469b12e6-571f-43b7-9c6c-647e78bfac6d
+
+	column first_week
+		dataType: date
+		lineageTag: af3aa35d-ce4d-4ba9-873a-be2b5af0de2b
+		summarizeBy: none
+		sourceColumn: first_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column aw
+		dataType: date
+		lineageTag: 5d5be6d2-8aef-42df-b210-9a440b612555
+		summarizeBy: none
+		sourceColumn: aw
+
+		annotation SummarizationSetBy = Automatic
+
+	column user_id
+		dataType: int64
+		lineageTag: 02618192-e909-4b67-8e97-00cc55bd9d9c
+		summarizeBy: sum
+		sourceColumn: user_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column offset_week
+		dataType: int64
+		lineageTag: 5a863544-b22f-4391-bc11-496315e61f1b
+		summarizeBy: none
+		sourceColumn: offset_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column cohort_users
+		dataType: int64
+		lineageTag: 883b13e9-7f45-4d34-b42d-5ef91132965b
+		summarizeBy: sum
+		sourceColumn: cohort_users
+
+		annotation SummarizationSetBy = Automatic
+
+	column retention
+		dataType: double
+		lineageTag: 38e60e62-a336-4cfa-895f-3d08187d6d7c
+		summarizeBy: sum
+		sourceColumn: retention
+
+		annotation SummarizationSetBy = Automatic
+
+	partition cohort_weekly = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents("C:/Users/14362/WorkBuddy/2026-10-22-19-10-44/pbi_dashboard/data/cohort_weekly.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					#"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					#"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {{"first_week", type date}, {"aw", type date}, {"user_id", Int64.Type}, {"offset_week", Int64.Type}, {"cohort_users", Int64.Type}, {"retention", type number}})
+				in
+					#"Changed Type"

@@ -1,0 +1,60 @@
+table ltv_weekly
+	lineageTag: d1db5785-eea4-4b40-9f2a-9040c777c7c5
+
+	column first_week
+		dataType: date
+		lineageTag: 0a594481-eaf0-4265-bce7-c5d3fe9b06ec
+		summarizeBy: none
+		sourceColumn: first_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column offset_week
+		dataType: int64
+		lineageTag: d654f609-5a52-4557-a90e-7306a78267a8
+		summarizeBy: none
+		sourceColumn: offset_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column purchases
+		dataType: int64
+		lineageTag: 121c9335-3450-4a05-8493-82810797fca3
+		summarizeBy: sum
+		sourceColumn: purchases
+
+		annotation SummarizationSetBy = Automatic
+
+	column buyers
+		dataType: int64
+		lineageTag: 4ab7bb44-8c8a-4b73-88f5-99a9c0a60fe2
+		summarizeBy: sum
+		sourceColumn: buyers
+
+		annotation SummarizationSetBy = Automatic
+
+	column cohort_users
+		dataType: int64
+		lineageTag: e8e29996-45f9-4436-b10e-0f0d905fa0f9
+		summarizeBy: sum
+		sourceColumn: cohort_users
+
+		annotation SummarizationSetBy = Automatic
+
+	column purch_per_user
+		dataType: double
+		lineageTag: 4e33751a-da42-40cd-a94e-0596105ff2f4
+		summarizeBy: sum
+		sourceColumn: purch_per_user
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ltv_weekly = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents("C:/Users/14362/WorkBuddy/2026-10-22-19-10-44/pbi_dashboard/data/ltv_weekly.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					#"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					#"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {{"first_week", type date}, {"offset_week", Int64.Type}, {"purchases", Int64.Type}, {"buyers", Int64.Type}, {"cohort_users", Int64.Type}, {"purch_per_user", type number}})
+				in
+					#"Changed Type"

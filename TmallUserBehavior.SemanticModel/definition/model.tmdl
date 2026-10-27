@@ -1,0 +1,5 @@
+model Model
+	culture: zh-CN
+	defaultPowerBIDataSourceVersion: powerBI_V3
+
+annotation PBI_QueryOrder = ['dim_date','agg_daily_behavior','agg_daily_funnel','agg_hour_behavior','agg_daily_category','fact_purchase','dim_user_rfm','cohort_weekly','ltv_weekly','anomaly_daily_purchase']

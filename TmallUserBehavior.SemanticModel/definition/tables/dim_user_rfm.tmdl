@@ -1,0 +1,120 @@
+table dim_user_rfm
+	lineageTag: 8bdd3218-dc91-48ba-8813-b4becb9a0a80
+
+	measure '买家总数' = DISTINCTCOUNT(dim_user_rfm[user_id])
+		formatString: #,0
+		lineageTag: f82489bc-e125-45f4-adf2-e94a2cfe79f6
+
+	measure '人均购买次数' = AVERAGE(dim_user_rfm[frequency])
+		formatString: #,0.0
+		lineageTag: 1175ab8c-81db-4ed1-8c1f-2bd58720baec
+
+	measure '复购率' = DIVIDE(CALCULATE(DISTINCTCOUNT(dim_user_rfm[user_id]), dim_user_rfm[frequency] > 1), DISTINCTCOUNT(dim_user_rfm[user_id]))
+		formatString: 0.0%
+		lineageTag: b5be5864-3938-484c-8e40-a12aec0885c8
+
+	column user_id
+		dataType: int64
+		lineageTag: 58ccd3df-03fd-41a4-843b-ae50a97a7b2f
+		summarizeBy: none
+		sourceColumn: user_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_date
+		dataType: date
+		lineageTag: b301a3f8-a14e-4539-b67f-440929692556
+		summarizeBy: none
+		sourceColumn: last_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column frequency
+		dataType: int64
+		lineageTag: 836f34a6-b0bf-4911-b7ba-47be34109b74
+		summarizeBy: sum
+		sourceColumn: frequency
+
+		annotation SummarizationSetBy = Automatic
+
+	column first_date
+		dataType: date
+		lineageTag: 07967f31-22d2-450a-bc3a-3cecb49dc02d
+		summarizeBy: none
+		sourceColumn: first_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column distinct_items
+		dataType: int64
+		lineageTag: 959561d1-13d8-46a4-b101-5023aa7d547a
+		summarizeBy: sum
+		sourceColumn: distinct_items
+
+		annotation SummarizationSetBy = Automatic
+
+	column active_days
+		dataType: int64
+		lineageTag: 22b74399-8f6b-4b6a-a51b-11fc2eddd813
+		summarizeBy: sum
+		sourceColumn: active_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column recency_days
+		dataType: int64
+		lineageTag: 9813ab9b-279e-466d-bb88-a1d5c1954468
+		summarizeBy: sum
+		sourceColumn: recency_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_new_buyer
+		dataType: int64
+		lineageTag: 976e1488-28ad-41b8-93bf-eecf7f437232
+		summarizeBy: sum
+		sourceColumn: is_new_buyer
+
+		annotation SummarizationSetBy = Automatic
+
+	column r_score
+		dataType: int64
+		lineageTag: 8555f327-4283-4875-aa84-ff1bb8bc3607
+		summarizeBy: sum
+		sourceColumn: r_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column f_score
+		dataType: int64
+		lineageTag: e94340ef-c774-4017-ac8f-6137af4f52bf
+		summarizeBy: sum
+		sourceColumn: f_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column m_score
+		dataType: int64
+		lineageTag: af24fd66-c1f7-4a72-b2b7-84d41e87b13b
+		summarizeBy: sum
+		sourceColumn: m_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column segment
+		dataType: string
+		lineageTag: 2879a699-ced4-40e6-a28c-a9760764fa99
+		summarizeBy: none
+		sourceColumn: segment
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_user_rfm = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents("C:/Users/14362/WorkBuddy/2026-10-22-19-10-44/pbi_dashboard/data/dim_user_rfm.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					#"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					#"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {{"user_id", Int64.Type}, {"last_date", type date}, {"frequency", Int64.Type}, {"first_date", type date}, {"distinct_items", Int64.Type}, {"active_days", Int64.Type}, {"recency_days", Int64.Type}, {"is_new_buyer", Int64.Type}, {"r_score", Int64.Type}, {"f_score", Int64.Type}, {"m_score", Int64.Type}, {"segment", type text}})
+				in
+					#"Changed Type"

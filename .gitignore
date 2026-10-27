@@ -1,0 +1,34 @@
+Objects/
+Listings/
+DebugConfig/
+*.uvguix.*
+*.uvoptx
+*.bak
+*.dep
+*.crf
+*.o
+*.d
+*.axf
+*.hex
+*.bin
+*.elf
+*.map
+*.lst
+# CubeMX / IDE
+.vscode/
+.idea/
+.mxproject
+# 系统文件
+Thumbs.db
+.DS_Store
+desktop.ini
+# 压缩包
+*.zip
+*.rar
+*.7z
+# 日志
+*.log
+.workbuddy/
+daily-report/
+study-plan/
+p2p-handbook/

@@ -1,0 +1,52 @@
+table fact_purchase
+	lineageTag: 10d96faa-0afa-4efe-a62d-0039b1b5f964
+
+	column user_id
+		dataType: int64
+		lineageTag: bd2b3c13-21da-4e63-abc1-787a6fbb3897
+		summarizeBy: sum
+		sourceColumn: user_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column item_id
+		dataType: int64
+		lineageTag: 5080d055-dd3e-494c-9bed-95333b08118b
+		summarizeBy: none
+		sourceColumn: item_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column item_category
+		dataType: int64
+		lineageTag: 17538f10-4681-4d06-afd2-a59ba16f25f8
+		summarizeBy: none
+		sourceColumn: item_category
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'date'
+		dataType: date
+		lineageTag: babf592d-107e-44b0-ad81-8c61b17e95c9
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+	column hour
+		dataType: int64
+		lineageTag: 2d9166b3-a47b-4970-9856-ff661d95c318
+		summarizeBy: none
+		sourceColumn: hour
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_purchase = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents("C:/Users/14362/WorkBuddy/2026-10-22-19-10-44/pbi_dashboard/data/fact_purchase.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					#"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					#"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {{"user_id", Int64.Type}, {"item_id", Int64.Type}, {"item_category", Int64.Type}, {"date", type date}, {"hour", Int64.Type}})
+				in
+					#"Changed Type"

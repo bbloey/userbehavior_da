@@ -1,0 +1,59 @@
+relationship rel_date_behavior
+	lineageTag: 83c53814-bf24-4f56-8404-86db205a63bf
+
+	fromTable: agg_daily_behavior
+	fromColumn: date
+	fromCardinality: many
+	toTable: dim_date
+	toColumn: date
+	toCardinality: one
+
+relationship rel_date_funnel
+	lineageTag: c5f3835d-d5e5-4a68-b156-167e2135a075
+
+	fromTable: agg_daily_funnel
+	fromColumn: date
+	fromCardinality: many
+	toTable: dim_date
+	toColumn: date
+	toCardinality: one
+
+relationship rel_date_category
+	lineageTag: c84630b4-48d3-4d83-a1e2-b71afeef7fb4
+
+	fromTable: agg_daily_category
+	fromColumn: date
+	fromCardinality: many
+	toTable: dim_date
+	toColumn: date
+	toCardinality: one
+
+relationship rel_date_purchase
+	lineageTag: 29013b19-9070-4586-a1a2-b94cdade8fa4
+
+	fromTable: fact_purchase
+	fromColumn: date
+	fromCardinality: many
+	toTable: dim_date
+	toColumn: date
+	toCardinality: one
+
+relationship rel_date_anomaly
+	lineageTag: 4e7fb9ea-0580-48dd-9de4-592cc5071b55
+
+	fromTable: anomaly_daily_purchase
+	fromColumn: date
+	fromCardinality: many
+	toTable: dim_date
+	toColumn: date
+	toCardinality: one
+
+relationship rel_rfm_purchase
+	lineageTag: d1229dd1-33ba-4dac-8c88-73833204381a
+
+	fromTable: dim_user_rfm
+	fromColumn: user_id
+	fromCardinality: one
+	toTable: fact_purchase
+	toColumn: user_id
+	toCardinality: many

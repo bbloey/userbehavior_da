@@ -1,0 +1,44 @@
+table agg_daily_behavior
+	lineageTag: 38a3fa58-07f6-4ec1-b491-bd25ef9ec3ba
+
+	column 'date'
+		dataType: date
+		lineageTag: 4c4d7618-e933-408e-8b39-e14be0c25d19
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+	column behavior_label
+		dataType: string
+		lineageTag: e1d5b3cc-873f-4557-8616-f490d5d49675
+		summarizeBy: none
+		sourceColumn: behavior_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column events
+		dataType: int64
+		lineageTag: 35a22141-a755-46aa-a18c-df80f277b1d8
+		summarizeBy: sum
+		sourceColumn: events
+
+		annotation SummarizationSetBy = Automatic
+
+	column users
+		dataType: int64
+		lineageTag: 46e61cfe-0386-48ab-9f81-4bd1bd8b692c
+		summarizeBy: sum
+		sourceColumn: users
+
+		annotation SummarizationSetBy = Automatic
+
+	partition agg_daily_behavior = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents("C:/Users/14362/WorkBuddy/2026-10-22-19-10-44/pbi_dashboard/data/agg_daily_behavior.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					#"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					#"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {{"date", type date}, {"behavior_label", type text}, {"events", Int64.Type}, {"users", Int64.Type}})
+				in
+					#"Changed Type"

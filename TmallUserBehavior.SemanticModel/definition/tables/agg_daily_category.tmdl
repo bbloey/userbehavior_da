@@ -1,0 +1,52 @@
+table agg_daily_category
+	lineageTag: bc5e3f35-5894-4409-8d6c-2917a5180f94
+
+	column 'date'
+		dataType: date
+		lineageTag: 70de3059-b7c3-4bc3-bd3f-fce3369f5374
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+	column item_category
+		dataType: int64
+		lineageTag: 393b59f5-9baf-4cf4-8940-a07327362575
+		summarizeBy: none
+		sourceColumn: item_category
+
+		annotation SummarizationSetBy = Automatic
+
+	column behavior_label
+		dataType: string
+		lineageTag: b5ed64f9-bbd6-4d94-a556-56f9ea4a806d
+		summarizeBy: none
+		sourceColumn: behavior_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column events
+		dataType: int64
+		lineageTag: 7918705d-f590-4fe9-b4c1-b1283ca1ab09
+		summarizeBy: sum
+		sourceColumn: events
+
+		annotation SummarizationSetBy = Automatic
+
+	column users
+		dataType: int64
+		lineageTag: f3c9e7aa-8f8a-487a-9e73-e85c2c0eeebd
+		summarizeBy: sum
+		sourceColumn: users
+
+		annotation SummarizationSetBy = Automatic
+
+	partition agg_daily_category = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents("C:/Users/14362/WorkBuddy/2026-10-22-19-10-44/pbi_dashboard/data/agg_daily_category.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					#"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					#"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {{"date", type date}, {"item_category", Int64.Type}, {"behavior_label", type text}, {"events", Int64.Type}, {"users", Int64.Type}})
+				in
+					#"Changed Type"

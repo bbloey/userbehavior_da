@@ -1,0 +1,100 @@
+table agg_daily_funnel
+	lineageTag: 11966611-e098-48e3-9295-cc87b580cd1a
+
+	measure '浏览用户数(日)' = SUM(agg_daily_funnel[browse])
+		formatString: #,0
+		lineageTag: 900c343c-e788-40a6-82d5-4046e1de45f0
+
+	measure '加购用户数(日)' = SUM(agg_daily_funnel[cart])
+		formatString: #,0
+		lineageTag: 4eda05ba-229f-42cc-b45d-3595d21f6739
+
+	measure '购买事件数(日)' = SUM(agg_daily_funnel[purchase])
+		formatString: #,0
+		lineageTag: 594a2601-2807-463f-8411-968d68b23206
+
+	measure '浏览→加购率' = DIVIDE([加购用户数(日)], [浏览用户数(日)])
+		formatString: 0.0%
+		lineageTag: 387aa5c9-49ca-4981-83f1-7d9868d8633a
+
+	measure '浏览→购买率' = DIVIDE([购买事件数(日)], [浏览用户数(日)])
+		formatString: 0.0%
+		lineageTag: afeb98f2-f500-46f7-b831-07991c256122
+
+	measure '加购→购买率' = DIVIDE([购买事件数(日)], [加购用户数(日)])
+		formatString: 0.0%
+		lineageTag: c98a689f-ce1f-4e82-87e5-5b8bffccffe2
+
+	column 'date'
+		dataType: date
+		lineageTag: 9606366c-c0d4-4d9c-985a-1c8ca2cd6d69
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+	column browse
+		dataType: int64
+		lineageTag: 1c35ce77-2d14-4db4-8698-8e74b8e82bda
+		summarizeBy: sum
+		sourceColumn: browse
+
+		annotation SummarizationSetBy = Automatic
+
+	column favorite
+		dataType: int64
+		lineageTag: 60e881cd-f61e-4ade-bb28-67812e8826c6
+		summarizeBy: sum
+		sourceColumn: favorite
+
+		annotation SummarizationSetBy = Automatic
+
+	column cart
+		dataType: int64
+		lineageTag: ed061883-8e73-4d95-81a5-a37eccdd57af
+		summarizeBy: sum
+		sourceColumn: cart
+
+		annotation SummarizationSetBy = Automatic
+
+	column purchase
+		dataType: int64
+		lineageTag: 13f89296-6765-48bc-a89d-77ebb3f503c0
+		summarizeBy: sum
+		sourceColumn: purchase
+
+		annotation SummarizationSetBy = Automatic
+
+	column cart_rate
+		dataType: double
+		lineageTag: 78f50713-84dc-41d0-b933-3c4ce4fa3a77
+		summarizeBy: sum
+		sourceColumn: cart_rate
+
+		annotation SummarizationSetBy = Automatic
+
+	column buy_rate
+		dataType: double
+		lineageTag: a4986c79-4b7f-4794-8135-ca9bd6e3da61
+		summarizeBy: sum
+		sourceColumn: buy_rate
+
+		annotation SummarizationSetBy = Automatic
+
+	column cart2buy
+		dataType: double
+		lineageTag: 70742b81-ab92-44ab-a348-663ac7762664
+		summarizeBy: sum
+		sourceColumn: cart2buy
+
+		annotation SummarizationSetBy = Automatic
+
+	partition agg_daily_funnel = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents("C:/Users/14362/WorkBuddy/2026-10-22-19-10-44/pbi_dashboard/data/agg_daily_funnel.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					#"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					#"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers", {{"date", type date}, {"browse", Int64.Type}, {"favorite", Int64.Type}, {"cart", Int64.Type}, {"purchase", Int64.Type}, {"cart_rate", type number}, {"buy_rate", type number}, {"cart2buy", type number}})
+				in
+					#"Changed Type"

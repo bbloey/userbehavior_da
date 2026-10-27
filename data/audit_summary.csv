@@ -1,0 +1,12 @@
+﻿,0
+rows_raw,15463110
+null_geohash,8207386
+null_category,0
+invalid_behavior,0
+dup_rows,3677190
+bad_date,0
+date_min,2014-11-18 00:00:00
+date_max,2014-12-18 00:00:00
+bad_hour,0
+date_out_of_range,0
+rows_clean,11785920
